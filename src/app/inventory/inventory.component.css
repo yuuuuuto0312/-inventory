@@ -1,0 +1,26 @@
+mat-card {
+  margin: 20px auto;
+  max-width: 800px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+[mat-row]:nth-child(even) {
+  background-color: rgba(206, 212, 241, 1);
+}
+[mat-row]:hover {
+  background-color: rgba(137, 143, 177, 1);
+  cursor: pointer;
+}
+.inventory-header {
+  background: linear-gradient(to right, #e0e7ff, #f3f4f6);
+  padding: 20px;
+  border-radius: 12px;
+}
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

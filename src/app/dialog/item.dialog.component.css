@@ -1,0 +1,27 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  font-size: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 0 0 12px 0;
+}
+
+p {
+  margin: 4px 0;
+}

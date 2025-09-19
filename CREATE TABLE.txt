@@ -1,0 +1,19 @@
+CREATE TABLE stocks (
+  product_id SERIAL PRIMARY KEY,         -- 商品ID（自動採番）
+  product_name TEXT NOT NULL,            -- 商品名
+  quantity INTEGER NOT NULL DEFAULT 0,   -- 商品個数
+  deleted BOOLEAN NOT NULL DEFAULT FALSE -- デリートフラグ（削除済みかどうか）
+);
+
+INSERT INTO stocks (product_name, quantity, deleted)
+VALUES
+  ('ノートパソコン', 12, FALSE),
+  ('マウス', 45, FALSE),
+  ('キーボード', 30, FALSE),
+  ('古いケーブル', 0, TRUE),         -- 削除扱い
+  ('モバイルバッテリー', 20, FALSE);
+
+
+SELECT * FROM stocks;
+
+

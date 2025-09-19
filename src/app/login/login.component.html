@@ -1,0 +1,16 @@
+<mat-card class="login-card">
+  <h2>ログイン</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>メールアドレス</mat-label>
+      <input matInput formControlName="email" type="email" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>パスワード</mat-label>
+      <input matInput formControlName="password" type="password" required>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">ログイン</button>
+  </form>
+</mat-card>

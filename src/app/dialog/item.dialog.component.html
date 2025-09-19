@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>
+  {{ mode === 'add' ? '商品追加（管理者）' : '商品詳細（管理者）' }}
+</h1>
+
+<div mat-dialog-content class="dialog-content">
+  <ng-container *ngIf="mode === 'view'">
+    <p><strong>ID:</strong> {{ data.id }}</p>
+    <p><strong>品目名:</strong> {{ data.name }}</p>
+    <p><strong>個数:</strong> {{ data.quantity }}</p>
+  </ng-container>
+
+  <ng-container *ngIf="mode === 'add'">
+    <mat-form-field appearance="fill">
+      <mat-label>品目名</mat-label>
+      <input matInput [(ngModel)]="name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>個数</mat-label>
+      <input matInput type="number" [(ngModel)]="quantity">
+    </mat-form-field>
+  </ng-container>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button *ngIf="mode === 'view'" (click)="useItem()">使用する</button>
+  <button mat-button *ngIf="mode === 'add'" (click)="submitNewItem()">追加</button>
+  <button mat-button mat-dialog-close>閉じる</button>
+</div>
