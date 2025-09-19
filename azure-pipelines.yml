@@ -1,0 +1,29 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.19.0'
+    displayName: 'Install Node.js'
+
+
+  - script: |
+      npm install
+      npm run build --prod
+    displayName: 'Build Angular App'
+
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: "/"  # angular.json がある場所
+      output_location: "dist/stock-app"  # dist フォルダの中のアプリ名に合わせて変更
+    env:
+      azure_static_web_apps_api_token: $(deployment_token)
