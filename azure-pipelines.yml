@@ -26,4 +26,4 @@ steps:
       app_location: "/"  # angular.json がある場所
       output_location: "dist/stock-app"  # dist フォルダの中のアプリ名に合わせて変更
     env:
-      azure_static_web_apps_api_token: $(ff67235395798aa52cbf0acf5572e21171c21c08a6f4abba566d5ceea7b0f3ba01-604bfc5c-25d3-4aab-a4e0-781193f9287b0001927036363a00)
+      azure_static_web_apps_api_token: $(deployment_token)
