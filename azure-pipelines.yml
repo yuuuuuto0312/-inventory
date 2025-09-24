@@ -1,41 +1,30 @@
+# azure-static-web-apps.yml
+name: Azure Static Web Apps CI/CD
+
 trigger:
   branches:
     include:
-      - main  # 適宜変更
+      - main  # デプロイ対象のブランチ
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
+- job: build_and_deploy
+  displayName: Build and Deploy Job
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - checkout: self
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.19.0'
+    displayName: 'Install Node.js'
 
-variables:
-  appName: 'deploytest0919'  # Azure App Service の名前
-  resourceGroup: '99_TEST'
-  packagePath: '$(System.DefaultWorkingDirectory)/dist'  # Angular のビルド出力先
+  - script: |
+      npm install
+      npm run build -- --output-path=dist
+    displayName: 'Build Angular App'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.19.0'  # Angular に適した Node.js バージョン
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --configuration production
-  displayName: 'Install dependencies and build Angular app'
-
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(packagePath)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/angular.zip'
-    replaceExistingArchive: true
-  displayName: 'Archive Angular build output'
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: '<サービス接続名>'  # Azure DevOps で設定したサービス接続
-    appType: 'webApp'
-    appName: '$(appName)'
-    package: '$(Build.ArtifactStagingDirectory)/angular.zip'
-  displayName: 'Deploy to Azure App Service'
+  - task: AzureStaticWebApp@0
+    inputs:
+      app_location: '/'  # Angular プロジェクトのルート
+      output_location: 'dist'  # ビルド成果物のディレクトリ
+      azure_static_web_apps_api_token: $(deployment_token)
