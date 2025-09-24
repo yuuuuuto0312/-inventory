@@ -12,21 +12,20 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-  - checkout: self
+    - checkout: self
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.19.0'
-  displayName: 'Install Node.js 20.19.0'
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.19.0'
+      displayName: 'Install Node.js 20.19.0'
 
+    - script: |
+        npm install
+        npm run build -- --output-path=dist
+      displayName: 'Build Angular App'
 
-  - script: |
-      npm install
-      npm run build -- --output-path=dist
-    displayName: 'Build Angular App'
-
-  - task: AzureStaticWebApp@0
-    inputs:
-      app_location: '/'  # Angular プロジェクトのルート
-      output_location: 'dist'  # ビルド成果物のディレクトリ
-      azure_static_web_apps_api_token: $(deployment_token)
+    - task: AzureStaticWebApp@0
+      inputs:
+        app_location: '/'  # Angular プロジェクトのルート
+        output_location: 'dist'  # ビルド成果物のディレクトリ
+        azure_static_web_apps_api_token: $(deployment_token)
