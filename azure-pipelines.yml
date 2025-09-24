@@ -13,10 +13,12 @@ jobs:
     vmImage: ubuntu-latest
   steps:
   - checkout: self
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '20.19.0'
-    displayName: 'Install Node.js'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.19.0'
+  displayName: 'Install Node.js 20.19.0'
+
 
   - script: |
       npm install
