@@ -2,14 +2,42 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "appArtifactLocation": {
+    "staticSiteName": {
+      "type": "string"
+    },
+    "location": {
       "type": "string",
-      "defaultValue": "dist/stock-app",
-      "metadata": {
+      "defaultValue": "East Asia"
+    },
+    "repositoryUrl": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "main"
+    },
+    "appArtifactLocation": {
+      "type": "string","metadata"{
         "description": "The location of the app artifacts relative to the repository root"
       }
     }
   },
-  "resources": [],
+  "resources": [
+    {
+      "type": "Microsoft.Web/staticSites",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('staticSiteName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "repositoryUrl": "[parameters('repositoryUrl')]",
+        "branch": "[parameters('branch')]",
+        "buildProperties": {
+          "appLocation": "/",
+          "apiLocation": "",
+          "appArtifactLocation": "[parameters('appArtifactLocation')]"
+        }
+      }
+    }
+  ],
   "outputs": {}
 }
