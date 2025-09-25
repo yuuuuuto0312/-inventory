@@ -1,0 +1,9 @@
+"parameters": {
+  "appArtifactLocation": {
+    "type": "string",
+    "defaultValue": "dist/stock-app",
+    "metadata": {
+      "description": "The location of the app artifacts relative to the repository root"
+    }
+  }
+}
