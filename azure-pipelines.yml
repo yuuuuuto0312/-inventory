@@ -27,5 +27,5 @@ jobs:
     - task: AzureStaticWebApp@0
       inputs:
         app_location: '/'  # Angular プロジェクトのルート
-        output_location: 'dist'  # ビルド成果物のディレクトリ
+        output_location: 'dist/stock-app' # ビルド成果物のディレクトリ
         azure_static_web_apps_api_token: $(deployment_token)
