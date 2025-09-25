@@ -1,21 +1,36 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "staticSiteName": {
-      "value": "deploytest0925"
-    },
-    "location": {
-      "value": "East Asia"
-    },
-    "repositoryUrl": {
-      "value": "https://github.com/yuuuuuto0312/-inventory.git"
-    },
-    "branch": {
-      "value": "main"
-    },
-    "appArtifactLocation": {
-      "value": "dist/stock-app"
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "deploytest0925"
+        },
+        "location": {
+            "value": "eastasia"
+        },
+        "sku": {
+            "value": "Free"
+        },
+        "skucode": {
+            "value": "Free"
+        },
+        "repositoryUrl": {
+            "value": "https://github.com/yuuuuuto0312/-inventory"
+        },
+        "branch": {
+            "value": "main"
+        },
+        "repositoryToken": {
+            "value": "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"
+        },
+        "appLocation": {
+            "value": "/stock-app"
+        },
+        "apiLocation": {
+            "value": "/demo"
+        },
+        "appArtifactLocation": {
+            "value": "dist"
+        }
     }
-  }
 }
