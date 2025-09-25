@@ -1,7 +1,5 @@
 {
-    "$schema": {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#"
-},
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "name": {
@@ -40,13 +38,12 @@
     },
     "resources": [
         {
-            "apiVersion": "2022-09-01",
+            "apiVersion": "2021-03-01",
             "name": "[parameters('name')]",
             "type": "Microsoft.Web/staticSites",
             "location": "[parameters('location')]",
             "tags": {},
             "properties": {
-                "deploymentAuthPolicy": "DeploymentToken",
                 "repositoryUrl": "[parameters('repositoryUrl')]",
                 "branch": "[parameters('branch')]",
                 "repositoryToken": "[parameters('repositoryToken')]",
@@ -54,12 +51,11 @@
                     "appLocation": "[parameters('appLocation')]",
                     "apiLocation": "[parameters('apiLocation')]",
                     "appArtifactLocation": "[parameters('appArtifactLocation')]"
-                },
-                "enterpriseGradeCdnStatus": "[parameters('enterpriseGradeCdnStatus')]"
+                }
             },
             "sku": {
-                "Tier": "[parameters('sku')]",
-                "Name": "[parameters('skuCode')]"
+                "name": "[parameters('skuCode')]",
+                "tier": "[parameters('sku')]"
             }
         }
     ]
