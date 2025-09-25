@@ -31,9 +31,6 @@
         },
         "appArtifactLocation": {
             "type": "string"
-        },
-        "enterpriseGradeCdnStatus": {
-            "type": "string"
         }
     },
     "resources": [
@@ -54,7 +51,7 @@
                 }
             },
             "sku": {
-                "name": "[parameters('skuCode')]",
+                "name": "[parameters('skucode')]",
                 "tier": "[parameters('sku')]"
             }
         }
