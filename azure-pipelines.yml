@@ -1,23 +1,31 @@
+# azure-static-web-apps.yml
 name: Azure Static Web Apps CI/CD
 
-on:
-  push:
-    branches:
-      - main
+trigger:
+  branches:
+    include:
+      - main  # デプロイ対象のブランチ
 
 jobs:
-  deploy_job:
-    runs-on: ubuntu-latest
-    name: Deploy Angular App
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+- job: build_and_deploy
+  displayName: Build and Deploy Job
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+    - checkout: self
 
-      - name: Deploy to Azure Static Web Apps
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "dist/stock-app"
-          output_location: ""
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.19.0'
+      displayName: 'Install Node.js 20.19.0'
+
+    - script: |
+        npm install
+        npm run build -- --output-path=dist
+      displayName: 'Build Angular App'
+
+    - task: AzureStaticWebApp@0
+      inputs:
+        app_location: '/'  # Angular プロジェクトのルート
+        output_location: 'dist'  # ビルド成果物のディレクトリ
+        azure_static_web_apps_api_token: $(deployment_token)
