@@ -1,0 +1,95 @@
+<div class="attendance-container">
+  <div class="content-wrapper">
+    <!-- 左側: 勤怠登録エリア -->
+    <div class="left-section">
+      <h2>勤怠登録</h2>
+      <div class="selected-date">
+        <h3>📅 {{ getSelectedDateText() }}</h3>
+      </div>
+
+      <!-- メッセージ表示 -->
+      <div *ngIf="message" class="alert" [ngClass]="{
+        'alert-success': messageType === 'success',
+        'alert-error': messageType === 'error',
+        'alert-info': messageType === 'info'
+      }">
+        {{ message }}
+      </div>
+
+      <!-- メンバー一覧テーブル -->
+      <div class="members-list">
+        <table>
+          <thead>
+            <tr>
+              <th>ユーザー名</th>
+              <th>状態</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.username }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="{
+                  'status-working': getStatusText(user.userId) === '勤務中',
+                  'status-completed': getStatusText(user.userId) === '退勤済み',
+                  'status-leave': getStatusText(user.userId) === '年休',
+                  'status-none': getStatusText(user.userId) === '未登録'
+                }">
+                  {{ getStatusText(user.userId) }}
+                </span>
+              </td>
+              <td class="action-buttons">
+                <button class="btn btn-sm btn-checkin" (click)="checkIn(user.userId, user.username)"
+                  [disabled]="!canCheckIn(user.userId)">
+                  出勤
+                </button>
+                <button class="btn btn-sm btn-checkout" (click)="checkOut(user.userId, user.username)"
+                  [disabled]="!canCheckOut(user.userId)">
+                  退勤
+                </button>
+                <button class="btn btn-sm btn-leave" (click)="annualLeave(user.userId, user.username)"
+                  [disabled]="!canAnnualLeave(user.userId)">
+                  年休
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-text" *ngIf="users.length === 0">
+        <p>メンバーが登録されていません</p>
+      </div>
+    </div>
+
+    <!-- 右側: カレンダーエリア -->
+    <div class="right-section">
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button class="btn-nav" (click)="previousMonth()">◀</button>
+          <h3>{{ getMonthYearText() }}</h3>
+          <button class="btn-nav" (click)="nextMonth()">▶</button>
+        </div>
+
+        <div class="calendar-grid">
+          <!-- 曜日ヘッダー -->
+          <div class="calendar-weekday" *ngFor="let day of weekDays">
+            {{ day }}
+          </div>
+
+          <!-- カレンダーの日付 -->
+          <div *ngFor="let day of calendarDays" class="calendar-day" [ngClass]="{
+              'other-month': !day.isCurrentMonth,
+              'today': day.isToday,
+              'selected': day.isSelected,
+              'sunday': day.date.getDay() === 0,
+              'saturday': day.date.getDay() === 6
+            }" (click)="selectDate(day)">
+            {{ day.date.getDate() }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

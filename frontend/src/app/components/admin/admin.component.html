@@ -1,0 +1,181 @@
+<div class="admin-section">
+  <h2>管理者機能</h2>
+
+  <!-- タブナビゲーション -->
+  <div class="tab-navigation">
+    <button class="tab-button" [class.active]="activeTab === 'attendance'" (click)="switchTab('attendance')">
+      📊 勤怠記録
+    </button>
+    <button class="tab-button" [class.active]="activeTab === 'users'" (click)="switchTab('users')">
+      👥 ユーザー管理
+    </button>
+  </div>
+
+  <!-- メッセージ表示 -->
+  <div *ngIf="message" class="alert" [ngClass]="{
+    'alert-success': messageType === 'success',
+    'alert-error': messageType === 'error',
+    'alert-info': messageType === 'info'
+  }">
+    {{ message }}
+  </div>
+
+  <!-- 勤怠記録タブ -->
+  <div *ngIf="activeTab === 'attendance'" class="tab-content">
+    <!-- 検索フォーム -->
+    <div class="search-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startDate">開始日</label>
+          <input type="date" id="startDate" [(ngModel)]="startDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="endDate">終了日</label>
+          <input type="date" id="endDate" [(ngModel)]="endDate" class="form-control">
+        </div>
+      </div>
+      <div class="button-container">
+        <button class="btn btn-search" (click)="searchRecords()">
+          🔍 検索
+        </button>
+        <button class="btn btn-export" (click)="exportExcel()">
+          📥 Excelエクスポート
+        </button>
+      </div>
+    </div>
+
+    <!-- 勤怠記録テーブル -->
+    <div class="table-container" *ngIf="records.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>ユーザーID</th>
+            <th>ユーザー名</th>
+            <th>日付</th>
+            <th>勤怠区分</th>
+            <th>出勤時刻</th>
+            <th>退勤時刻</th>
+            <th>勤務時間</th>
+            <th>状態</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of records">
+            <td>{{ record.userId }}</td>
+            <td>{{ record.username }}</td>
+            <td>{{ formatDate(record.recordDate) }}</td>
+            <td>
+              <span *ngIf="record.attendanceType === 'ANNUAL_LEAVE'" class="type-badge type-leave">年休</span>
+              <span *ngIf="record.attendanceType !== 'ANNUAL_LEAVE'" class="type-badge type-work">通常</span>
+            </td>
+            <td>{{ record.attendanceType === 'ANNUAL_LEAVE' ? '-' : formatTime(record.checkInTime) }}</td>
+            <td>{{ record.attendanceType === 'ANNUAL_LEAVE' ? '-' : formatTime(record.checkOutTime) }}</td>
+            <td>{{ record.attendanceType === 'ANNUAL_LEAVE' ? '年休' : calculateWorkHours(record) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+              'status-in-progress': record.status === 'IN_PROGRESS',
+              'status-completed': record.status === 'COMPLETED',
+              'status-leave': record.status === 'ANNUAL_LEAVE'
+            }">
+                {{ record.status === 'ANNUAL_LEAVE' ? '年休' : (record.status === 'IN_PROGRESS' ? '勤務中' : '完了') }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="no-data" *ngIf="records.length === 0">
+      <p>検索ボタンをクリックして勤怠記録を表示してください</p>
+    </div>
+  </div>
+
+  <!-- ユーザー管理タブ -->
+  <div *ngIf="activeTab === 'users'" class="tab-content">
+    <div class="user-management">
+      <div class="user-header">
+        <h3>ユーザー一覧</h3>
+        <button class="btn btn-add-user" (click)="showAddUserForm()">
+          ➕ ユーザー追加
+        </button>
+      </div>
+
+      <!-- ユーザー追加/編集フォーム -->
+      <div *ngIf="showUserForm" class="user-form-modal">
+        <div class="user-form-content">
+          <h3>{{ editingUser ? 'ユーザー編集' : 'ユーザー追加' }}</h3>
+
+          <div class="form-group">
+            <label for="username">ユーザー名 *</label>
+            <input type="text" id="username" [(ngModel)]="newUser.username" class="form-control" placeholder="山田太郎">
+          </div>
+
+          <div class="form-group">
+            <label for="email">メールアドレス *</label>
+            <input type="email" id="email" [(ngModel)]="newUser.email" class="form-control"
+              placeholder="yamada@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="role">役割</label>
+            <select id="role" [(ngModel)]="newUser.role" class="form-control">
+              <option value="EMPLOYEE">一般ユーザー</option>
+              <option value="ADMIN">管理者</option>
+            </select>
+          </div>
+
+          <div class="form-buttons">
+            <button class="btn btn-primary" (click)="editingUser ? updateUser() : createUser()">
+              {{ editingUser ? '更新' : '追加' }}
+            </button>
+            <button class="btn btn-secondary" (click)="cancelUserForm()">
+              キャンセル
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ユーザーテーブル -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ユーザー名</th>
+              <th>メールアドレス</th>
+              <th>役割</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.userId }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="role-badge" [ngClass]="{
+                  'role-admin': user.role === 'ADMIN',
+                  'role-employee': user.role === 'EMPLOYEE'
+                }">
+                  {{ getRoleDisplayName(user.role) }}
+                </span>
+              </td>
+              <td class="action-buttons">
+                <button class="btn btn-sm btn-edit" (click)="showEditUserForm(user)">
+                  ✏️ 編集
+                </button>
+                <button class="btn btn-sm btn-delete" (click)="deleteUser(user)" [disabled]="user.role === 'ADMIN'">
+                  🗑️ 削除
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="no-data" *ngIf="users.length === 0">
+        <p>ユーザーが登録されていません</p>
+      </div>
+    </div>
+  </div>
+</div>
